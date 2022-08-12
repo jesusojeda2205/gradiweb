@@ -39,11 +39,10 @@
 
             //   console.log(data.responseText);
                 //los productyos
-                var productos = JSON.parse(data.responseText);
-                var nuevoArreglo = [];
+                var productos = JSON.parse(data.responseText);       
                 var array = productos.products;
 
-                var resultado = '[\n'
+                var resultado = '[\n';
                 for (let index = 0; index < array.length; index++) {
                    
 
@@ -51,7 +50,7 @@
                       resultado+= '"price" : '+array[index].variants[0].price+',\n';
                       resultado+= '"status" : '+array[index].status+',\n';
                       resultado+= '"created_at" : '+formatDate(new Date(array[index].created_at))+',';
-                      resultado+='\t\t\t\n}\n';
+                      resultado+='\t\t\t\n},\n';
 
                 }
                 resultado += '\n]'
