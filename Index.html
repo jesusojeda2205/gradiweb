@@ -1,0 +1,75 @@
+<html>
+
+<head>
+    <script src="scripts/jquery.js"></script>
+</head>
+<script>
+
+    function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
+    //inicia la pagina
+    window.onload = function () {
+
+
+        // En este ejemplo, si realiza una solicitud ajax al siguiente sitio web
+        var myUrl = 'https://devtestrecruitte.myshopify.com/admin/api/2022-07/products.json';
+        //  Pero si lo haces desde un navegador, entonces funcionará sin problema ...
+
+        // Sin embargo, para que funcione, vamos a utilizar el servicio gratuito de cors-anywhere para evitar este
+        var proxy = 'https://cors-anywhere.herokuapp.com/';
+
+        $.ajax({
+            // La URL del proxy espera que, como primer parámetro de URL, se omita la URL.
+            // https://cors-anywhere.herokuapp.com/{my-url-to-bypass}
+            url: proxy + myUrl,
+            beforeSend: function (xhr) { xhr.setRequestHeader('X-Shopify-Access-Token', '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'); },
+            complete: function (data) {
+
+            //   console.log(data.responseText);
+                //los productyos
+                var productos = JSON.parse(data.responseText);
+                var nuevoArreglo = [];
+                var array = productos.products;
+
+                var resultado = '[\n'
+                for (let index = 0; index < array.length; index++) {
+                   
+
+                      resultado+='"'+array[index].title+'" => {\n';
+                      resultado+= '"price" : '+array[index].variants[0].price+',\n';
+                      resultado+= '"status" : '+array[index].status+',\n';
+                      resultado+= '"created_at" : '+formatDate(new Date(array[index].created_at))+',';
+                      resultado+='\t\t\t\n}\n';
+
+                }
+                resultado += '\n]'
+
+
+                 console.log(resultado);
+            }
+        });
+
+    }
+
+
+
+
+</script>
+
+<body>
+    <div class="result"></div>
+</body>
+
+</html>
